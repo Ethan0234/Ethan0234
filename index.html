@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Statistical Calculator</h1>
+        <input type="text" id="numbersInput" placeholder="Enter numbers separated by commas">
+        <button onclick="calculateStats()">Calculate</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function calculateStats() {
+            const numbersInput = document.getElementById("numbersInput").value;
+            const numbersArray = numbersInput.split(",").map(num => parseFloat(num));
+
+            const mean = calculateMean(numbersArray);
+            const median = calculateMedian(numbersArray);
+            const standardDeviation = calculateStandardDeviation(numbersArray);
+            const interquartileRange = calculateInterquartileRange(numbersArray);
+
+            document.getElementById("results").innerHTML = `
+                <p>Mean: ${mean}</p>
+                <p>Median: ${median}</p>
+                <p>Standard Deviation: ${standardDeviation}</p>
+                <p>Interquartile Range: ${interquartileRange}</p>
+            `;
+        }
+
+        function calculateMean(numbersArray) {
+            const sum = numbersArray.reduce((acc, num) => acc + num, 0);
+            return sum / numbersArray.length;
+        }
+
+        function calculateMedian(numbersArray) {
+            const sortedArray = numbersArray.sort((a, b) => a - b);
+            const middleIndex = Math.floor(sortedArray.length / 2);
+            if (sortedArray.length % 2 === 0) {
+                return (sortedArray[middleIndex - 1] + sortedArray[middleIndex]) / 2;
+            } else {
+                return sortedArray[middleIndex];
+            }
+        }
+
+        function calculateStandardDeviation(numbersArray) {
+            const mean = calculateMean(numbersArray);
+            const squaredDifferences = numbersArray.map(num => Math.pow(num - mean, 2));
+            const variance = squaredDifferences.reduce((acc, val) => acc + val, 0) / numbersArray.length;
+            return Math.sqrt(variance);
+        }
+
+        function calculateInterquartileRange(numbersArray) {
+            const sortedArray = numbersArray.sort((a, b) => a - b);
+            const lowerQuartileIndex = Math.floor(sortedArray.length * 0.25);
+            const upperQuartileIndex = Math.floor(sortedArray.length * 0.75);
+            const lowerQuartile = sortedArray[lowerQuartileIndex];
+            const upperQuartile = sortedArray[upperQuartileIndex];
+            return upperQuartile - lowerQuartile;
+        }
+    </script>
+</body>
+</html>
